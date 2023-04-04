@@ -2,14 +2,14 @@ package main
 
 import (
 	"context"
+	"log"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/kuruyasin8/ginger/repository"
+	"github.com/kuruyasin8/ginger/server"
+	"github.com/kuruyasin8/ginger/service"
 )
-
-type User struct {
-	ID   string `json:"id" bson:"_id"`
-	Name string `json:"name" bson:"name"`
-}
 
 func main() {
 	ctx := context.Background()
@@ -20,13 +20,15 @@ func main() {
 	}
 	defer repo.Close(ctx)
 
-	usersRepository := repository.NewUsersRepository(ctx, repo)
+	app := fiber.New()
 
-	user, err := usersRepository.GetSingleUser(ctx, nil)
-	if err != nil {
-		panic(err)
-	}
+	app.Use(logger.New())
 
-	println(user.ID)
-	println(user.Name)
+	service := service.New(ctx, repo)
+	server := server.New(app, service)
+
+	server.GetMultipleUsers(ctx)
+	server.GetSingleUser(ctx)
+
+	log.Fatal(server.Listen())
 }
