@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/kuruyasin8/ginger/errors"
 	"github.com/kuruyasin8/ginger/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,16 +14,19 @@ type Users struct {
 	collection *mongo.Collection
 }
 
+var users *Users
+
 func NewUsersRepository(ctx context.Context, repo *Repository) *Users {
 	collection := repo.database.Collection("users")
 
-	return &Users{
-		Repository: &Repository{
-			client:   repo.client,
-			database: repo.database,
-		},
-		collection: collection,
+	if users == nil {
+		users = &Users{
+			Repository: repo,
+			collection: collection,
+		}
 	}
+
+	return users
 }
 
 func (r *Users) GetSingleUser(ctx context.Context, filter interface{}) (*model.User, error) {
@@ -33,7 +37,7 @@ func (r *Users) GetSingleUser(ctx context.Context, filter interface{}) (*model.U
 	user := new(model.User)
 
 	if err := r.collection.FindOne(ctx, filter).Decode(user); err != nil {
-		return nil, err
+		return nil, errors.NewNotFound("user (%v) not found", filter.(bson.M)["_id"])
 	}
 
 	return user, nil

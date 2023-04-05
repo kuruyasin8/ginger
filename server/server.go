@@ -11,13 +11,23 @@ type Server struct {
 	service *service.Service
 }
 
+var server *Server
+
 func New(app *fiber.App, service *service.Service) *Server {
-	return &Server{
-		app,
-		service,
+	if server == nil {
+		server = &Server{
+			app:     app,
+			service: service,
+		}
 	}
+
+	return server
 }
 
 func (s *Server) Listen() error {
 	return s.app.Listen(config.Port)
+}
+
+func (s *Server) Close() error {
+	return s.app.Shutdown()
 }

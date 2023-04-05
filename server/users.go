@@ -16,15 +16,10 @@ func (s *Server) GetSingleUser(ctx context.Context) *Server {
 
 		user, err := s.service.GetSingleUser(ctx, query)
 		if err != nil {
-			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-				"error": err.Error(),
-			})
+			return err
 		}
 
-		return c.JSON(fiber.Map{
-			"message": "success",
-			"user":    user,
-		})
+		return c.Status(http.StatusOK).JSON(user)
 	})
 
 	return s
@@ -40,15 +35,10 @@ func (s *Server) GetMultipleUsers(ctx context.Context) *Server {
 
 		users, err := s.service.GetMultipleUsers(ctx, query)
 		if err != nil {
-			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-				"error": err.Error(),
-			})
+			return err
 		}
 
-		return c.JSON(fiber.Map{
-			"message": "success",
-			"users":   users,
-		})
+		return c.Status(http.StatusOK).JSON(users)
 	})
 
 	return s

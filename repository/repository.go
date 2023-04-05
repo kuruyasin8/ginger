@@ -12,8 +12,14 @@ type Repository struct {
 	database *mongo.Database
 }
 
+var repository *Repository
+
 func New(ctx context.Context) *Repository {
-	return &Repository{}
+	if repository == nil {
+		repository = &Repository{}
+	}
+
+	return repository
 }
 
 func (r *Repository) Connect(ctx context.Context) error {
