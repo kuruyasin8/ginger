@@ -10,11 +10,6 @@ type Service struct {
 	usersRepository *repository.Users
 }
 
-type Abstract interface {
-	Validate() error
-	Process(ctx context.Context) (any, error)
-}
-
 var service *Service
 
 func New(ctx context.Context, repo *repository.Repository) *Service {
