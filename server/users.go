@@ -6,12 +6,30 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/kuruyasin8/ginger/model"
 	"github.com/kuruyasin8/ginger/service"
-	"github.com/kuruyasin8/ginger/stash"
 )
 
+func (s *Server) Register(ctx context.Context) *Server {
+	s.app.Post("/register", func(c *fiber.Ctx) error {
+		user := new(model.User)
+
+		if err := c.BodyParser(user); err != nil {
+			return err
+		}
+
+		if err := s.service.Register(ctx, user); err != nil {
+			return err
+		}
+
+		return c.Status(http.StatusCreated).SendString("registration successfully completed")
+	})
+
+	return s
+}
+
 func (s *Server) GetSingleUser(ctx context.Context) *Server {
-	s.app.Get("/users/:uid", stash.Authenticate(), stash.Auhtorize(stash.Salt, stash.Admin), func(c *fiber.Ctx) error {
+	s.app.Get("/users/:uid", func(c *fiber.Ctx) error {
 		query := new(service.UserQuery)
 
 		if uid, err := strconv.Atoi(c.Params("uid")); err != nil {

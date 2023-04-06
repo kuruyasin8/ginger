@@ -27,6 +27,7 @@ func main() {
 	service := service.New(ctx, repo)
 	server := server.New(app, service)
 
+	server.Register(ctx)
 	server.GetMultipleUsers(ctx)
 	server.GetSingleUser(ctx)
 

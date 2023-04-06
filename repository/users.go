@@ -29,6 +29,22 @@ func NewUsersRepository(ctx context.Context, repo *Repository) *Users {
 	return users
 }
 
+func (r *Users) InsertSingleUser(ctx context.Context, user *model.User) error {
+	if _, err := r.collection.InsertOne(ctx, user); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Users) UpdateSingleUser(ctx context.Context, filter interface{}, user *model.User) error {
+	if _, err := r.collection.UpdateOne(ctx, filter, user); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *Users) GetSingleUser(ctx context.Context, filter interface{}) (*model.User, error) {
 	if filter == nil {
 		filter = new(bson.M)
