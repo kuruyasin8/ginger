@@ -37,7 +37,7 @@ func (r *Users) GetSingleUser(ctx context.Context, filter interface{}) (*model.U
 	user := new(model.User)
 
 	if err := r.collection.FindOne(ctx, filter).Decode(user); err != nil {
-		return nil, errors.NewNotFound("user (%v) not found", filter.(bson.M)["_id"])
+		return nil, errors.NewNotFound("user (%d) not found", filter.(bson.M)["_id"])
 	}
 
 	return user, nil

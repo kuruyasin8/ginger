@@ -5,23 +5,17 @@ import (
 
 	"github.com/kuruyasin8/ginger/model"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserQuery struct {
-	ID      string `param:"uid"`
+	ID      uint   `param:"uid"`
 	Page    uint   `query:"page"`
 	PerPage uint   `query:"per_page"`
 	Filter  string `query:"filter"`
 }
 
 func (s *Service) GetSingleUser(ctx context.Context, query *UserQuery) (*model.User, error) {
-	id, err := primitive.ObjectIDFromHex(query.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	filter := bson.M{"_id": id}
+	filter := bson.M{"_id": query.ID}
 
 	user, err := s.usersRepository.GetSingleUser(ctx, filter)
 	if err != nil {

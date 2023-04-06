@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"net/http"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kuruyasin8/ginger/service"
@@ -13,7 +14,11 @@ func (s *Server) GetSingleUser(ctx context.Context) *Server {
 	s.app.Get("/users/:uid", stash.Authenticate(), stash.Auhtorize(stash.Salt, stash.Admin), func(c *fiber.Ctx) error {
 		query := new(service.UserQuery)
 
-		query.ID = c.Params("uid")
+		if uid, err := strconv.Atoi(c.Params("uid")); err != nil {
+			return err
+		} else {
+			query.ID = uint(uid)
+		}
 
 		user, err := s.service.GetSingleUser(ctx, query)
 		if err != nil {
