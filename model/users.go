@@ -5,7 +5,7 @@ type User struct {
 	LastName    string       `json:"last_name" bson:"last_name"`
 	Birthday    int64        `json:"birthday" bson:"birthday"`
 	Email       string       `json:"email" bson:"email"`
-	Password    string       `json:"password" bson:"-"`
+	Password    string       `json:"password,omitempty" bson:"-"`
 	Credentials *Credentials `json:"credentials" bson:"credentials"`
 }
 
@@ -15,4 +15,9 @@ type Credentials struct {
 	Verified   bool   `json:"verified" bson:"verified"`
 	CreatedAt  int64  `json:"created_at" bson:"created_at"`
 	ModifiedAt int64  `json:"modified_at" bson:"modified_at"`
+}
+
+type Token struct {
+	AccessToken  string `json:"access_token" bson:"access_token"`
+	RefreshToken string `json:"refresh_token" bson:"refresh_token"`
 }

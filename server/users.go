@@ -28,6 +28,44 @@ func (s *Server) Register(ctx context.Context) *Server {
 	return s
 }
 
+func (s *Server) Login(ctx context.Context) *Server {
+	s.app.Post("/login", func(c *fiber.Ctx) error {
+		user := new(model.User)
+
+		if err := c.BodyParser(user); err != nil {
+			return err
+		}
+
+		res, err := s.service.Login(ctx, user)
+		if err != nil {
+			return err
+		}
+
+		return c.Status(http.StatusOK).JSON(res)
+	})
+
+	return s
+}
+
+func (s *Server) RefreshToken(ctx context.Context) *Server {
+	s.app.Post("/refresh", func(c *fiber.Ctx) error {
+		token := new(model.Token)
+
+		if err := c.BodyParser(token); err != nil {
+			return err
+		}
+
+		res, err := s.service.RefreshToken(ctx, token)
+		if err != nil {
+			return err
+		}
+
+		return c.Status(http.StatusOK).JSON(res)
+	})
+
+	return s
+}
+
 func (s *Server) GetSingleUser(ctx context.Context) *Server {
 	s.app.Get("/users/:uid", func(c *fiber.Ctx) error {
 		query := new(service.UserQuery)

@@ -28,6 +28,8 @@ func main() {
 	server := server.New(app, service)
 
 	server.Register(ctx)
+	server.Login(ctx)
+	server.RefreshToken(ctx)
 	server.GetMultipleUsers(ctx)
 	server.GetSingleUser(ctx)
 

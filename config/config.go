@@ -5,4 +5,5 @@ import "os"
 var (
 	Port     = ":80"
 	MongoUri = os.Getenv("MONGO_URI")
+	Secret   = os.Getenv("SECRET")
 )
