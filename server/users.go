@@ -6,10 +6,11 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kuruyasin8/ginger/service"
+	"github.com/kuruyasin8/ginger/stash"
 )
 
 func (s *Server) GetSingleUser(ctx context.Context) *Server {
-	s.app.Get("/users/:uid", func(c *fiber.Ctx) error {
+	s.app.Get("/users/:uid", stash.Authenticate(), stash.Auhtorize(stash.Salt, stash.Admin), func(c *fiber.Ctx) error {
 		query := new(service.UserQuery)
 
 		query.ID = c.Params("uid")
