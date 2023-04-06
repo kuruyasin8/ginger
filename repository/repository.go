@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/kuruyasin8/ginger/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -23,7 +24,7 @@ func New(ctx context.Context) *Repository {
 }
 
 func (r *Repository) Connect(ctx context.Context) error {
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(config.MongoUri))
 	if err != nil {
 		return err
 	}
